@@ -239,7 +239,7 @@ So, the plan as a whole is:
 4. Spoof the origin again, so both our malicious credentials with the CSS injection and the flag are loaded
 5. Leak the flag char-by-char by recursively importing a stylesheet which only generates once the current character is known
 
-My solver is in the relevant dir -- it includes a server to generate the CSS, a setup page to write the credentials initially, and another page to trigger the read and start the leak.
+My solver is in the relevant dir. It includes a server to generate the CSS, a setup page to write the credentials initially, and another page to trigger the read and start the leak.
 
 Here's a demo of the exploit in action:
 
@@ -266,7 +266,7 @@ const commands = {
 }
 ```
 
-If we can pass a token with the `evaluate` command then we'll be able to execute arbitrary JS with background script privileges. We're able to make arbitrary 'redeem token' requests (via `autofill.html`) but we need to be able to generate valid codes for our tokens as well. Here's how codes are generated:
+If we can pass a token with the `evaluate` command then we'll be able to execute arbitrary JS with background script privileges. We're able to make arbitrary 'redeem token' requests (via `autofill.html`) but we need to be able to generate valid codes for our tokens as well. Codes are generated as below:
 
 ```js
 // background.js
@@ -356,7 +356,7 @@ const doHmac = async (d) => toHexString(new Uint8Array(await crypto.subtle.diges
 // snip
 ```
 
-The token is converted to a `Uint8Array` before being hashed -- since `Uint8Array`s store unsigned 8 bit integers, the maximum code point that can be stored is 255; anything higher is taken mod 256. This means that the `|` character is actually equivalent (in terms of calculating the hash) to many other characters, so we can replace all of the `|` symbols (which have code point `124`) in the original token with e.g. `ż` (which has code point `124 + 256`), so that we can force command to be read from our extended data instead!
+The token is converted to a `Uint8Array` before being hashed. Since `Uint8Array`s store unsigned 8 bit integers, the maximum code point that can be stored is 255 and anything higher is taken mod 256. This means that the `|` character is actually equivalent (in terms of calculating the hash) to many other characters, so we can replace all of the `|` symbols (which have code point `124`) in the original token with e.g. `ż` (which has code point `124 + 256`), so that we can force command to be read from our extended data instead!
 
 > This doesn't break the `parseInt` since it ignores all the characters after the first `ż`.
 
