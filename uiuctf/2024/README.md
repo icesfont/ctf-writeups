@@ -8,7 +8,7 @@ Here's a quick demo (redirects):
 
 Upon visiting (almost) any page, the extension injects `content.js` which then checks if a login form exists on the page. If it does, then it communicates with `background.js` to fetch the user's credentials for the page's origin and displays them in an iframe (with location `autofill.html`, and in a more roundabout way -- see below). If the user logs in, then their login credentials are saved to storage.
 
-At a slightly deeper level, the way the content script talks to the background script is with tokens -- the content script can send an 'issue token' request to the background script signalling intent for a specific purpose, and if that request is deemed valid by the background script, then it returns a token representing the request and some authentication code for the token which only it should be able to generate.
+At a slightly deeper level, the way the content script talks to the background script is with tokens. The content script can send an 'issue token' request to the background script signalling intent for a specific purpose, and if that request is deemed valid by the background script, then it returns a token representing the request and some authentication code for the token which only it should be able to generate.
 
 To actually perform the action, the content script can send a 'redeem token' request with the token and the authentication code, which the background script can verify against. This is all done over the `chrome.runtime` API, which page scripts have no access to (background scripts are more privileged than content scripts are more privileged than page scripts), so the control we have over making these requests is very limited.
 
@@ -196,9 +196,9 @@ const commands = {
 // snip
 ```
 
-The essential thing is that the origin of the tab is embedded into the token, and only the credentials from the origin given in the token are retrieved (if the origin matches the tab's origin) so that all the tokens we generate from our malicious page are for our own origin, and not for `https://pwnypass.c.hc.lc`.
+The essential thing is that the origin of the tab is embedded into the token, and only the credentials from the origin given in the token are retrieved (if the origin matches the tab's origin). All the tokens we generate from our malicious page are for our own origin, and not for `https://pwnypass.c.hc.lc`.
 
-The way they get the origin of the tab is with `getOrigin`. Here's that code again:
+How can we get the flag, which is stored for `https://pwnypass.c.hc.lc`, if this is the case? The way they get the origin of the tab is with `getOrigin`. Here's that code again:
 
 ```js
 const getOrigin = async (id) => new Promise((res)=>chrome.tabs.get(id, (t)=>setTimeout(()=>res(new URL(t.pendingUrl ?? t.url).origin),200)));
