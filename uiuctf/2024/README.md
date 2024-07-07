@@ -2,11 +2,11 @@ Last weekend, I played [UIUCTF 2024](https://2024.uiuc.tf/) with [MEOW MEOW MEOW
 
 ## Overview
 
-Upon visiting (almost) any page, the extension injects `content.js` which then checks if a login form exists on the page. If it does, then it communicates with `background.js` to fetch the user's credentials for the page's origin and displays them in an iframe (with location `autofill.html`, and in a more roundabout way -- see below). If the user logs in, then their login credentials are saved to storage.
-
 Here's a quick demo (redirects):
 
 [![main](https://img.youtube.com/vi/zxsY-koHeYw/0.jpg)](https://www.youtube.com/watch?v=zxsY-koHeYw)
+
+Upon visiting (almost) any page, the extension injects `content.js` which then checks if a login form exists on the page. If it does, then it communicates with `background.js` to fetch the user's credentials for the page's origin and displays them in an iframe (with location `autofill.html`, and in a more roundabout way -- see below). If the user logs in, then their login credentials are saved to storage.
 
 At a slightly deeper level, the way the content script talks to the background script is with tokens -- the content script can send an 'issue token' request to the background script signalling intent for a specific purpose, and if that request is deemed valid by the background script, then it returns a token representing the request and some authentication code for the token which only it should be able to generate.
 
@@ -49,7 +49,7 @@ A few points:
 
 1. The credentials themselves aren't actually passed to the iframe -- instead, after getting a read token and authentication code from the background script, *those* are passed to the iframe instead (via the search parameters), which then makes a 'redeem token' request to get the credentials. Subtly, this allows us to be able to make an arbitrary 'redeem token' request, but this will only be useful if we can get a valid code for our token (part 2).
 
-2. The credentials are inserted directly into the page via `innerHTML` which means we potentially have arbitrary HTML injection if we can somehow save arbitrary credentials to storage! Sadly, this isn't quite uXSS, owing to the strict CSP of `script-src 'self' 'unsafe-eval'; object-src 'none';`.
+2. The credentials are inserted directly into the page via `innerHTML` which means we potentially have arbitrary HTML injection if we can somehow save arbitrary credentials to storage! This isn't quite uXSS, owing to the strict CSP of `script-src 'self' 'unsafe-eval'; object-src 'none';`.
 
 Indeed, we *can* save arbitrary credentials to storage! Here's the content script:
 
@@ -110,7 +110,7 @@ However, events and the DOM are shared by both page scripts and content scripts,
 
 The user bot visits `https://pwnypass.c.hc.lc/login.php` and saves the credentials `sigpwny:<FLAG1>` to the manager before visiting our URL; our goal is to leak credentials from the featureless origin `https://pwnypass.c.hc.lc` (featureless, as in there's not really anything to exploit on that site).
 
-Unfortunately, it's very hard to leverage our HTML injection. Though we can inject arbitrary HTML into a page with access to the same privileged APIs as `background.js`, we can't use these APIs since the only JS we can execute is from `'self'`, and none of these scripts seem to house any useful gadgets.
+It's very hard to leverage our HTML injection. Though we can inject arbitrary HTML into a page with access to the same privileged APIs as `background.js`, we can't use these APIs since the only JS we can execute is from `'self'`, and none of these scripts seem to house any useful gadgets.
 
 If we could get the flag on the same page as our HTML injection, then we could perform a CSS leak instead. Here's `background.js` with the irrelevant parts (for now) cut out:
 
@@ -208,7 +208,7 @@ This one-liner takes the origin from the `.pendingUrl` of the tab if it exists (
 
 > The URL the tab is navigating to, before it has committed. This property is only present if the extension's manifest includes the "tabs" permission and there is a pending navigation.
 
-Crucially, we can control this without destroying the event loop if we make a pending navigation, trigger the background logic, then cancel the navigation after `.pendingUrl` is read but before we are actually navigated\*\*\* -- this effectively means that we can spoof token requests from `https://pwnypass.c.hc.lc` if we can have the navigation stall for long enough!
+Crucially, we can control this without destroying the event loop if we make a pending navigation, trigger the background logic, then cancel the navigation after `.pendingUrl` is read but before we are actually navigated -- this effectively means that we can spoof token requests from `https://pwnypass.c.hc.lc` if we can have the navigation stall for long enough!
 
 There are a lot of ways to do this; the way I did it is with a massive file (maybe not very healthy for remote):
 
@@ -239,7 +239,7 @@ So, the plan as a whole is:
 4. Spoof the origin again, so both our malicious credentials with the CSS injection and the flag are loaded
 5. Leak the flag char-by-char by recursively importing a stylesheet which only generates once the current character is known
 
-Please find my solver in the relevant dir -- it includes a server to generate the CSS, a setup page to write the credentials initially, and another page to trigger the read and start the leak.
+My solver is in the relevant dir -- it includes a server to generate the CSS, a setup page to write the credentials initially, and another page to trigger the read and start the leak.
 
 Here's a demo of the exploit in action:
 
