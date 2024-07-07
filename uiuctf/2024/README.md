@@ -362,6 +362,6 @@ The token is converted to a `Uint8Array` before being hashed -- since `Uint8Arra
 
 Finally, with background script privileges, we have the `chrome.tabs` permission as specified in the manifest -- this means that we can successively open `file:///` URIs and use `chrome.tabs.executeScript` to get the page's HTML (which will be a directory listing) and send it back to us :)
 
-This solver is also in its relevant dir. Finally, here's a demo of the 2nd exploit in action:
+This solver is also in its relevant dir. Here's a demo of the 2nd exploit in action:
 
 [![flag2](https://img.youtube.com/vi/FCWvntLvK7E/0.jpg)](https://www.youtube.com/watch?v=FCWvntLvK7E)
