@@ -6,7 +6,7 @@ Upon visiting (almost) any page, the extension injects `content.js` which then c
 
 Here's a quick demo:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zxsY-koHeYw?si=klSZiP6WHSL-7wvY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![flag1](https://img.youtube.com/vi/zxsY-koHeYw/0.jpg)](https://www.youtube.com/watch?v=zxsY-koHeYw)
 
 At a slightly deeper level, the way the content script talks to the background script is with tokens -- the content script can send an 'issue token' request to the background script signalling intent for a specific purpose, and if that request is deemed valid by the background script, then it returns a token representing the request and some authentication code for the token which only it should be able to generate.
 
@@ -243,7 +243,7 @@ Please find my solver in the relevant dir -- it includes a server to generate th
 
 Here's a demo of the exploit in action:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/kpuw9PABadE?si=S6bKsOkAung2td9g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![flag1](https://img.youtube.com/vi/kpuw9PABadE/0.jpg)](https://www.youtube.com/watch?v=kpuw9PABadE)
 
 ## web/pwnypass2
 
@@ -364,4 +364,4 @@ Finally, with background script privileges, we have the `chrome.tabs` permission
 
 This solver is also in its relevant dir. Here's a demo of the exploit in action:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/FCWvntLvK7E?si=HW3VHi_cfPfxh7e7" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+[![flag2](https://img.youtube.com/vi/FCWvntLvK7E/0.jpg)](https://www.youtube.com/watch?v=FCWvntLvK7E)
