@@ -4,9 +4,9 @@ Last weekend, I played [UIUCTF 2024](https://2024.uiuc.tf/) with [MEOW MEOW MEOW
 
 Upon visiting (almost) any page, the extension injects `content.js` which then checks if a login form exists on the page. If it does, then it communicates with `background.js` to fetch the user's credentials for the page's origin and displays them in an iframe (with location `autofill.html`, and in a more roundabout way -- see below). If the user logs in, then their login credentials are saved to storage.
 
-Here's a quick demo:
+Here's a quick demo (redirects):
 
-[![flag1](https://img.youtube.com/vi/zxsY-koHeYw/0.jpg)](https://www.youtube.com/watch?v=zxsY-koHeYw)
+[![main](https://img.youtube.com/vi/zxsY-koHeYw/0.jpg)](https://www.youtube.com/watch?v=zxsY-koHeYw)
 
 At a slightly deeper level, the way the content script talks to the background script is with tokens -- the content script can send an 'issue token' request to the background script signalling intent for a specific purpose, and if that request is deemed valid by the background script, then it returns a token representing the request and some authentication code for the token which only it should be able to generate.
 
@@ -362,6 +362,6 @@ The token is converted to a `Uint8Array` before being hashed -- since `Uint8Arra
 
 Finally, with background script privileges, we have the `chrome.tabs` permission as specified in the manifest -- this means that we can successively open `file:///` URIs and use `chrome.tabs.executeScript` to get the page's HTML (which will be a directory listing) and send it back to us :)
 
-This solver is also in its relevant dir. Here's a demo of the exploit in action:
+This solver is also in its relevant dir. Finally, here's a demo of the 2nd exploit in action:
 
 [![flag2](https://img.youtube.com/vi/FCWvntLvK7E/0.jpg)](https://www.youtube.com/watch?v=FCWvntLvK7E)
