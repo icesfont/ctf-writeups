@@ -32,7 +32,7 @@ which effectively kills the script. Actually, the script body is still sent afte
 
 To make use of this, we need Chromium to send 2 script requests down the same connection (with keep-alive); the first to trigger this response splitting and the second to read the body of the first response as a whole response, i.e. request line, headers, and body.
 
-Chromium is very fickle. If you send a response to the first script where the `Content-Length` is less than the actual body, i.e. some of the body leaks into what should be the response to the 2nd request, then Chromium will close the connection at the point of sending the 2nd request.
+Chromium requires some very specific conditions for this to happen. If you send a response to the first script where the `Content-Length` is less than the actual body, i.e. some of the body leaks into what should be the response to the 2nd request, then Chromium will close the connection at the point of sending the 2nd request.
 
 Here's how the proxy request is done:
 
@@ -58,7 +58,7 @@ The dream scenario is:
 3. Chromium will interpret this as a complete response because of `Content-Length: 0`, so it'll reuse that connection when we send the 2nd script request;
 4. don't respond when we receive the 2nd script request. Instead, send the *body* of the 1st script response, and that'll be sent to the client (because of `proxyRes.pipe(res)`) and interpreted as the entire 2nd script response!
 
-One caveat is that `res.writeHead` doesn't actually flush the headers; they'll be flushed with the body when flush is called by `proxyRes.pipe(res)`. This means that we have to send at least 1 single byte of body to flush the headers. Because of how fickle Chromium is, this means that the connection won't be reused.
+One caveat is that `res.writeHead` doesn't actually flush the headers; they'll be flushed with the body when flush is called by `proxyRes.pipe(res)`. This means that we have to send at least 1 single byte of body to flush the headers. Because of the reason from earlier, this means that the connection won't be reused.
 
 Thankfully, we can *force* `res.writeHead` to flush the headers! `res.writeHead` calls `_storeHeader`, which eventually leads to [this](https://github.com/nodejs/node/blob/38b7ce3b1e54a8c20aa8892e2675f1ac95f2300b/lib/_http_outgoing.js#L587). `_storeHeader` is shared by both the http client *and* the http server implemented by Node; so this logic, which should be client-specific (since `Expect:` is a request header), applies to the server as well. Bizarrely, this means that we can provide `Expect: 100-continue` as a *response* header and that'll cause the headers to be flushed without any byte of the body being sent.
 
