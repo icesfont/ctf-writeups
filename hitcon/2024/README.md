@@ -32,7 +32,7 @@ which effectively kills the script. Actually, the script body is still sent afte
 
 To make use of this, we need Chromium to send 2 script requests down the same connection (with keep-alive); the first to trigger this response splitting and the second to read the body of the first response as a whole response, i.e. request line, headers, and body.
 
-Chromium requires some very specific conditions for this to happen. If you send a response to the first script where the `Content-Length` is less than the actual body, i.e. some of the body leaks into what should be the response to the 2nd request, then Chromium will close the connection at the point of sending the 2nd request.
+Chromium requires some very specific conditions for this to happen. If you send a response to the first script where the `Content-Length` is less than the length of actual body, i.e. some of the body leaks into what should be the response to the 2nd request, then Chromium will close the connection at the point of sending the 2nd request.
 
 Here's how the proxy request is done:
 
