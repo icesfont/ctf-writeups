@@ -1,7 +1,5 @@
 # Private Browsing+ - web
 
-## Writeup
-
 To escape the data: iframe, we can use a similar idea to [spanote](https://blog.arkark.dev/2022/11/18/seccon-en/#Solution-6); if we load our site over the proxy (which renders the viewer page and does a further fetch to the same location to get the actual content of our site), navigate away, then call `history.back()`, we can load the cached fetch response instead. This abuses these ideas:
 
 1. the history navigation checks the disk cache, and the fetch response is saved to disk cache;
