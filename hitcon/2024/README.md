@@ -28,7 +28,7 @@ if (
 }
 ```
 
-which effectively kills the script. Actually, the script body is still sent after this -- it's just CL that's set to 0. Superficially, this doesn't make a difference since Chromium still only reads the number of bytes denoted by the CL header, i.e. 0, but this means that our script body will be treated as a 2nd response which *the proxy doesn't interfere with*.
+which effectively kills the script. Actually, the script body is still sent after this -- it's just CL that's set to 0. Superficially, this doesn't make a difference since Chromium still only reads the number of bytes specified by the CL header, i.e. 0, but this means that our script body will be treated as a 2nd response which *the proxy doesn't interfere with*.
 
 To make use of this, we need Chromium to send 2 script requests down the same connection (with keep-alive); the first to trigger this response splitting and the second to read the body of the first response as a whole response, i.e. request line, headers, and body.
 
