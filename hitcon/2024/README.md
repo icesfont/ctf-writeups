@@ -62,6 +62,6 @@ One caveat is that `res.writeHead` doesn't actually flush the headers; they'll b
 
 Thankfully, we can *force* `res.writeHead` to flush the headers! `res.writeHead` eventually calls `_storeHeader`, which calls [this](https://github.com/nodejs/node/blob/38b7ce3b1e54a8c20aa8892e2675f1ac95f2300b/lib/_http_outgoing.js#L587). `_storeHeader` is shared by both the http client *and* the http server implemented by Node; so this logic, which should be client-specific (since `Expect:` is a request header), applies to the server as well. Bizarrely, this means that we can provide `Expect: 100-continue` as a *response* header and that'll cause the headers to be flushed without any byte of the body being sent.
 
-After this, we can use the same trick above to register a SW that replaces `/~note/` with our own iframe that sends the flag to our webhook.
+After this, we can use the same trick above to register a SW that replaces `/~note/` with our own page that sends the flag to our webhook.
 
 Solve script in relevant dir -- run `app.js` and send admin to `/solve.html`.
