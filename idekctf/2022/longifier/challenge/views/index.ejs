@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css"> 
+	<link rel="stylesheet" href="/css/loading.css"> 
+	<style>
+		.lds-ellipsis {
+			opacity: 0%;
+			transition: opacity 0.5s;
+		}
+	</style>
+	<script src="/js/loading.js"></script>
+	<title>Longifier</title>
+</head>
+<body>
+	<header>
+		<nav></nav>
+		<center>
+			<h1>Longifier</h1>
+			<p>Submit your unlongified URL and have it magically longified :)</p>
+			<% if (errorMsg) { %>
+			<mark><strong><%= errorMsg %></strong></mark>
+			<% } %>
+		</center>
+	</header>
+
+	<article>
+		<center>
+			<form id=longifyForm action="/" method="POST">
+				<label for=url>Your unlongified URL</label>
+				<input id=url name=url type=text placeholder="http://un.longifi.ed/abc123">
+				<input type=submit value=Longify>
+			</form>
+			<div id="loadingAnim" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+		</center>
+	</article>
+</body>
+</html>

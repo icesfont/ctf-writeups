@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css">
+	<style>
+	.iframe-container {
+	   overflow: hidden;
+	   padding-top: 56.25%;
+	   position: relative;
+	}
+	.iframe-container iframe {
+	   border: 0;
+	   height: 100%;
+	   left: 0;
+	   position: absolute;
+	   top: 0;
+	   width: 100%;
+	}
+	</style> 
+	<title>Longifier</title>
+</head>
+<body>
+	<header>
+		<nav></nav>
+		<center>
+			<h1>Longifier</h1>
+			<p>
+				<code><%= url %></code> longifies to <code><%= finalURL %></code>!
+			</p>
+		</center>
+		<br>
+		<a href="/"><i>Longify another URL</i></a>
+	</header>
+
+	<main>
+		<hr>
+		<h3>Details</h3>
+		<h4>Safe version</h4>
+		<div class="iframe-container">
+			<iframe sandbox srcdoc="<%= content %>"></iframe>
+		</div>
+		<h4>Source code</h4>
+		<pre><%= content %></pre>
+	</main>
+</body>
+</html>
