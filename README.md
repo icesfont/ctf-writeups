@@ -8,5 +8,5 @@
 | flamethrower    | idekCTF 2024             | web      | ★★★★★★☆☆☆☆ | with @downgrade  |
 | clyde-jail      | idekCTF 2024             | misc     | ★★★★★★★☆☆☆ | -                |
 | pages           | ImaginaryCTF Round 53    | web      | ★★★★★★☆☆☆☆ | -                |
-| fnotes          | idekCTF 2025             | web      | ★★★★★★★★★☆ | -                |
-| midi visualizer | idekCTF 2025             | web      | ★★☆☆☆☆☆☆☆☆ | with @downgrade  |
+| [fnotes](/idekctf/2025/#webfnotes)          | idekCTF 2025             | web      | ★★★★★★★★★☆ | -                |
+| [midi visualizer](/idekctf/2025/#webmidi-visualizer) | idekCTF 2025             | web      | ★★☆☆☆☆☆☆☆☆ | with @downgrade  |

